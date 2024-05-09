@@ -6,6 +6,8 @@ import com.github.alekseyvideman.seleniumdemo.pageobject.AccountPage;
 import com.github.alekseyvideman.seleniumdemo.pageobject.LoginPage;
 import com.github.alekseyvideman.seleniumdemo.pageobject.TransactionsPage;
 import com.github.alekseyvideman.seleniumdemo.transaction.TransactionType;
+import com.github.alekseyvideman.seleniumdemo.transaction.dto.TransactionLog;
+import com.opencsv.CSVWriter;
 import io.qameta.allure.Allure;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -13,13 +15,16 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -96,16 +101,44 @@ public class SeleniumWebDriverDemoTest {
 
     @Test
     @DisplayName("Открыть страницу транзакций и проверить наличие обеих транзакций")
-    public void givenTransactionsPage_whenCountRows_then2Expected() throws IOException {
+    public void givenTransactionsPage_whenCountRows_then2Expected() {
         var transactionsPage = new TransactionsPage(driver, new TransactionLogWebElementMapper());
         var history = transactionsPage.getHistory();
+
+        Allure.addAttachment("transactions", "text/plain", generateCsv(history), ".csv");
 
         assertTrue(history.size() >= 2);
         assertEquals(history.get(0).type(), TransactionType.CREDIT);
         assertEquals(history.get(1).type(), TransactionType.DEBIT);
+    }
 
-        transactionsPage.printCsv(history);
-        Allure.addAttachment("transactions-report.csv", Files.readString(Path.of("transactions-report.csv")));
+    public String generateCsv(List<TransactionLog> a) {
+        var sw = new StringWriter();
+        try (CSVWriter writer = new CSVWriter(sw)) {
+            writer.writeAll(convertHistoryToCsvData(a));
+
+            return sw.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<String[]> convertHistoryToCsvData(List<TransactionLog> history) {
+        var dateFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy h:mm:ss a", Locale.ENGLISH);
+
+        var result = new ArrayList<String[]>();
+        result.add(new String[] {"DATETIME", "AMOUNT", "TYPE"});
+
+        var list = history.stream()
+                .map(transactionLog -> new String[] {
+                        transactionLog.dateTime().format(dateFormatter),
+                        transactionLog.amount().toString(),
+                        transactionLog.type().toString()
+                })
+                .toList();
+
+        result.addAll(list);
+        return result;
     }
 
 }
