@@ -1,4 +1,5 @@
 version: "3.5"
+
 services:
   edge:
     image: selenium/node-edge:beta
@@ -33,3 +34,22 @@ services:
     container_name: demo-testing
     depends_on:
       - selenium-hub
+    command:
+      - /bin/sh
+      - -c
+      - |
+        gradle test
+        gradle allureServerGenerate
+      
+  allure-report-server:
+    image: kochetkovma/allure-server:latest
+    container_name: allure-report-server
+    depends_on:
+      - demo-testing
+    volumes:
+      - allure-server-store:/allure
+    ports:
+      - "8080:8080"
+
+volumes:
+  allure-server-store:

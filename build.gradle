@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "ru.iopump.qa.allure" version "0.1.2"
 }
 
 repositories {
@@ -21,10 +22,16 @@ dependencies {
     testImplementation "io.qameta.allure:allure-junit5"
 
     implementation 'com.opencsv:opencsv:3.7'
+
 }
 
 test {
     useJUnitPlatform()
+}
+
+allureServer {
+    relativeResultDir = 'build/allure-results'
+    allureServerUrl = 'http://allure-report-server:8080'
 }
 
 tasks.withType(JavaCompile).configureEach {
