@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    allureVersion = '2.27.0'
+    seleniumVersion = "4.20.0"
+    jupiterVersion = "5.10.2"
+}
+
+dependencies {
+
+    testImplementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$jupiterVersion"
+
+    testImplementation platform("io.qameta.allure:allure-bom:$allureVersion")
+    testImplementation "io.qameta.allure:allure-junit5"
+
+    implementation 'com.opencsv:opencsv:3.7'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+//tasks.test.dependsOn("runGrid")
+
+tasks.register("runGrid") {
+    doLast {
+
+    }
+}
