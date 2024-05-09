@@ -34,7 +34,7 @@ public class SeleniumWebDriverDemoTest {
     @BeforeAll
     public static void setUp() throws URISyntaxException, MalformedURLException {
         var options = new FirefoxOptions();
-        driver = new RemoteWebDriver(new URI("http://localhost:4444").toURL(), options);
+        driver = new RemoteWebDriver(new URI("http://selenium-hub:4444").toURL(), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
         driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(15));
     }
