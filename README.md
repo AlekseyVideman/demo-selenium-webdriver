@@ -9,5 +9,4 @@ A project made for learning Selenium WebDriver &amp; Grid.
 1. Clone the repository.
 1. Run command `cd demo-selenium-webdriver`.
 1. Run command `docker compose up`.
-1. After Docker ran containers, a link to the `Allure Report Server` web ui will be printed to console.
 1. See test results on `http://localhost:8080/ui`.
