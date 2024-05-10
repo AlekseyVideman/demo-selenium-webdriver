@@ -11,8 +11,6 @@ public class LoginPage extends PageModel {
     private final By loginButton = By.xpath("/html/body/div[1]/div/div[2]/div/form/button");
     private final By customerName = By.xpath("/html/body/div[1]/div/div[2]/div/div[1]/strong/span");
 
-    private String customerNameText;
-
     public LoginPage(WebDriver driver) {
         super(driver);
     }
@@ -26,11 +24,9 @@ public class LoginPage extends PageModel {
         select.selectByVisibleText(userName);
         
         driver.findElement(loginButton).click();
-
-        customerNameText = driver.findElement(customerName).getText();
     }
 
     public String getCustomerNameText() {
-        return customerNameText;
+        return driver.findElement(customerName).getText();
     }
 }
