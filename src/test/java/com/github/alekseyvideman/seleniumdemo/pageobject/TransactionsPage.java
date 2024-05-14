@@ -26,9 +26,6 @@ public class TransactionsPage extends PageModel {
     public List<TransactionLog> getHistory() {
         transactionsTab.click();
 
-//        var wait = new WebDriverWait(driver, Duration.ofSeconds(10;
-//        wait.until(ExpectedConditions.presenceOfElementLocated(transactionTableRow));
-
         return transactionTableRow.stream()
                 .map(transactionLogWebElementMapper::map)
                 .toList();
