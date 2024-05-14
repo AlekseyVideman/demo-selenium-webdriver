@@ -1,18 +1,31 @@
 package com.github.alekseyvideman.seleniumdemo.pageobject;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 public class AccountPage extends PageModel {
 
-    private final By depositTab = By.xpath("/html/body/div[1]/div/div[2]/div/div[3]/button[2]");
-    private final By withdrawTab = By.xpath("/html/body/div[1]/div/div[2]/div/div[3]/button[3]");
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[3]/button[2]")
+    private WebElement depositTab;
 
-    private final By depositWithdrawButton = By.className("btn-default");
-    private final By moneyAmountInputDeposit = By.xpath("/html/body/div[1]/div/div[2]/div/div[4]/div/form/div/input");
-    private final By moneyAmountInputWithdraw = By.xpath("/html/body/div[1]/div/div[2]/div/div[4]/div/form/div/input");
-    private final By transactionStatusText = By.xpath("/html/body/div[1]/div/div[2]/div/div[4]/div/span");
-    private final By balanceText = By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/strong[2]");
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[3]/button[3]")
+    private WebElement withdrawTab;
+
+    @FindBy(className = "btn-default")
+    private WebElement depositWithdrawButton;
+
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[4]/div/form/div/input")
+    private  WebElement moneyAmountInputDeposit;
+
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[4]/div/form/div/input")
+    private  WebElement moneyAmountInputWithdraw;
+
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[4]/div/span")
+    private  WebElement transactionStatusText;
+
+    @FindBy(xpath = "/html/body/div[1]/div/div[2]/div/div[2]/strong[2]")
+    private  WebElement balanceText;
 
     public AccountPage(WebDriver driver) {
         super(driver);
@@ -21,24 +34,24 @@ public class AccountPage extends PageModel {
     public void deposit(int money) {
         driver.navigate().refresh();
 
-        driver.findElement(depositTab).click();
-        driver.findElement(moneyAmountInputDeposit).sendKeys(String.valueOf(money));
-        driver.findElement(depositWithdrawButton).submit();
+        depositTab.click();
+        moneyAmountInputDeposit.sendKeys(String.valueOf(money));
+        depositWithdrawButton.submit();
     }
 
     public void withdraw(int money) {
         driver.navigate().refresh();
 
-        driver.findElement(withdrawTab).click();
-        driver.findElement(moneyAmountInputWithdraw).sendKeys(String.valueOf(money));
-        driver.findElement(depositWithdrawButton).submit();
+        withdrawTab.click();
+        moneyAmountInputWithdraw.sendKeys(String.valueOf(money));
+        depositWithdrawButton.submit();
     }
 
     public String getTransactionStatus() {
-        return driver.findElement(transactionStatusText).getText();
+        return transactionStatusText.getText();
     }
 
     public int getBalance() {
-        return Integer.parseInt(driver.findElement(balanceText).getText());
+        return Integer.parseInt(balanceText.getText());
     }
 }
